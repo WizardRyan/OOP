@@ -1,0 +1,11 @@
+{
+    "Ellipse" : {
+        "majorAxis" : 3,
+        "minorAxis" : 4
+    },
+
+    "Circle" : {
+        "majorAxis" : 10,
+        "minorAxis" : 10
+    }
+}
