@@ -35,12 +35,32 @@ namespace ShapesApp
 
         static void HandleOutput(Dictionary<string, double> areaTotals)
         {
-            Console.WriteLine("Would you like to (1) view output immediately, or  (2) save to a CSV? (enter num): ");
-            string response = Console.ReadLine();
-            if(response == "1")
+            string response = "";
+            do
+            {
+                Console.WriteLine("Would you like to (1) view output immediately, or  (2) save to a CSV? (enter num): ");
+                response = Console.ReadLine();
+            } while (!(response == "1" || response == "2"));
+
+            if (response == "1")
             {
                 DisplayOutput(areaTotals);
             }
+            else if(response == "2")
+            {
+                WriteToCSV(areaTotals);
+                Console.WriteLine("Output was written to \"areaTotals.csv\" using semi colon as a delimeter");
+            }
+        }
+
+        //https://stackoverflow.com/questions/10538425/c-sharp-dictionary-to-csv Tim Schmelter's solution
+        static void WriteToCSV(Dictionary<string, double> areaTotals)
+        {
+            String csv = String.Join(
+            Environment.NewLine,
+            areaTotals.Select(d => $"{d.Key};{d.Value};")
+);
+            File.WriteAllText("areaTotals.csv", csv);
         }
 
         static void DisplayOutput(Dictionary<string, double> areaTotals)
@@ -49,7 +69,6 @@ namespace ShapesApp
             Console.WriteLine("{0,-40} {1,5:N2}", "    Ellipses: ", areaTotals["Ellipses"]);
             Console.WriteLine("{0,-40} {1,5:N2}", "        Non-circle Ellipses: ", areaTotals["Non-CircleEllipses"]);
             Console.WriteLine("{0,-40} {1,5:N2}", "        Circles: ", areaTotals["Circles"]);
-
         }
 
         static Dictionary<string, double> CalculateAreaTotals(dynamic dataFromFile)
@@ -95,11 +114,6 @@ namespace ShapesApp
             };
         }
 
-        static dynamic ReadJson(string json)
-        {
-            return JArray.Parse(json);
-        }
-
         static dynamic ReadInFile()
         {
             bool validExt = false;
@@ -120,7 +134,7 @@ namespace ShapesApp
                     validExt = true;
 
                     var json = File.ReadAllText(fileName);
-                    fileData = ReadJson(json);
+                    fileData = JArray.Parse(json);
                 }
                 else if (fileExt == ".xml")
                 {
@@ -130,8 +144,10 @@ namespace ShapesApp
                     XmlDocument doc = new XmlDocument();
                     doc.LoadXml(xml);
 
+                    //this works under the assumption that data is stored under root, and each element is wrapped in a row tag
                     string json = JsonConvert.SerializeXmlNode(doc);
-                    fileData = ReadJson(json);
+                    fileData = JsonConvert.DeserializeObject<dynamic>(json);
+                    fileData = fileData.root.row;
                 }
                 else
                 {
