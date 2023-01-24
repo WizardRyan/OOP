@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+  <row>
+    <shapeName>Ellipse</shapeName>
+    <majorAxis>3</majorAxis>
+    <minorAxis>4</minorAxis>
+  </row>
+  <row>
+    <shapeName>Circle</shapeName>
+    <radius>10</radius>
+  </row>
+  <row>
+    <shapeName>Rectangle</shapeName>
+    <length>10.4</length>
+    <width>4.2</width>
+  </row>
+  <row>
+    <shapeName>Square</shapeName>
+    <sideLength>4</sideLength>
+  </row>
+  <row>
+    <shapeName>EquilateralTriangle</shapeName>
+    <sideLength>4</sideLength>
+  </row>
+  <row>
+    <shapeName>IsoscelesTriangle</shapeName>
+    <legsLength>4.6</legsLength>
+    <baseLength>3</baseLength>
+  </row>
+  <row>
+    <shapeName>ScaleneTriangle</shapeName>
+    <sideA>5.2</sideA>
+    <sideB>3.8</sideB>
+    <sideC>7.3</sideC>
+  </row>
+</root>

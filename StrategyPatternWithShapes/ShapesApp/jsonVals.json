@@ -1,11 +1,35 @@
-{
-    "Ellipse" : {
+[
+    {
+        "shapeName": "Ellipse",
         "majorAxis" : 3,
         "minorAxis" : 4
     },
-
-    "Circle" : {
-        "majorAxis" : 10,
-        "minorAxis" : 10
-    }
-}
+   {
+        "shapeName": "Circle",
+        "radius": 10
+   },
+   {
+        "shapeName": "Rectangle",
+        "length": 10.4,
+        "width" : 4.2
+   },
+   {
+        "shapeName": "Square",
+        "sideLength": 4
+   },
+   {
+        "shapeName": "EquilateralTriangle",
+        "sideLength": 4
+   },
+   {
+        "shapeName": "IsoscelesTriangle",
+        "legsLength": 4.6,
+        "baseLength": 3.0
+   },
+   {
+        "shapeName": "ScaleneTriangle",
+        "sideA": 5.2,
+        "sideB": 3.8,
+        "sideC": 7.3
+   }
+ ]
