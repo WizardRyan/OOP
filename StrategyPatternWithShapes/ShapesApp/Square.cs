@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ShapesApp
 {
-    public interface IShape
+    public class Square : Rectangle
     {
-        double GetArea();
+        public Square(double sideLength) : base(sideLength, sideLength) { }
     }
 }

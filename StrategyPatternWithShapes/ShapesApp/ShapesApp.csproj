@@ -76,9 +76,15 @@
   <ItemGroup>
     <Compile Include="Circle.cs" />
     <Compile Include="Ellipse.cs" />
+    <Compile Include="EquilateralTriangle.cs" />
     <Compile Include="IShape.cs" />
+    <Compile Include="IsoscelesTriangle.cs" />
+    <Compile Include="Rectangle.cs" />
+    <Compile Include="ScaleneTriangle.cs" />
     <Compile Include="ShapesAppDriver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Square.cs" />
+    <Compile Include="Triangle.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

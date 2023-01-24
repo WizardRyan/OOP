@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ShapesApp
 {
-    public interface IShape
+    public class EquilateralTriangle : Triangle
     {
-        double GetArea();
+        public EquilateralTriangle(double sideLength) : base(sideLength, sideLength, sideLength) { }
     }
 }

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ShapesApp
 {
-    public interface IShape
+    public class ScaleneTriangle : Triangle
     {
-        double GetArea();
+        public ScaleneTriangle(double sideA, double sideB, double sideC) : base(sideA, sideB, sideC) { }
     }
 }

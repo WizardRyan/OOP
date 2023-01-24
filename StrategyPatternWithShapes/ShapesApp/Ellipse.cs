@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ShapesApp
 {
-    internal class Ellipse : IShape
+    public class Ellipse : IShape
     {
         private double _majorAxis;
         private double _minorAxis;
