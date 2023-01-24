@@ -21,6 +21,7 @@ namespace ShapesApp
 
         public double GetArea()
         {
+            if(_sideA == 0 || _sideB == 0 || _sideC == 0) return 0;
             double p = (_sideA + _sideB + _sideC) / 2.0;
             return Math.Sqrt(p * (p - _sideA) * (p - _sideB) * (p - _sideC));
         }

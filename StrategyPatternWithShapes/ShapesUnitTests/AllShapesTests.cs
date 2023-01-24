@@ -35,6 +35,9 @@ namespace ShapesUnitTests
 
             shape = new ScaleneTriangle(4, 5.6, 8.2);
             Assert.AreEqual(10.037, shape.GetArea(), _ACCEPTABLE_DELTA);
+
+            shape = new ScaleneTriangle(-5, -2.3, 5);
+            Assert.AreEqual(0, shape.GetArea(), _ACCEPTABLE_DELTA);
         }
 
         [TestMethod]

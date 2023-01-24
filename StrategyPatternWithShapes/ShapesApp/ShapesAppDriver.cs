@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.Json;
-using System.Xml.Linq;
 using System.IO;
-using System.Text.Json.Serialization;
 using System.Xml;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Runtime.ConstrainedExecution;
 
 namespace ShapesApp
 {
