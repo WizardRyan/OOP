@@ -1,0 +1,186 @@
+﻿@using BicycleRaceSoftware.Shared
+@using BicycleRaceSoftware.Client.Services
+@inject IRacerService RacerService
+@inject ScreenManagerService ScreenManagerService
+@page "/"
+
+<div class="master-wrapper">
+	<div class="index-wrapper">
+		<div class="racer-column">
+			<h3>Observed</h3>
+			<h5 class="small-item">Bib</h5>
+			<h5 class="med-item">Name</h5>
+			<h5 class="med-small-item">Group #</h5>
+			<div class="list-group-container">
+				<ul class="list-group">
+					@foreach (var racer in selectedRacers)
+					{
+						<li @onclick="() => MoveToUnselected(racer)" class="list-group-item racer-item">
+							<span class="small-item">@racer.Bib</span>
+							<span class="med-item">@racer.Name</span>
+							<span class="small-item">@racer.GroupNum</span>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+
+		<div>
+			<div class="racer-column">
+				<h3>Unobserved</h3>
+				<h5 class="small-item">Bib</h5>
+				<h5 class="med-item">Name</h5>
+				<h5 class="med-small-item">Group #</h5>
+				<div class="list-group-container">
+					<ul class="list-group">
+						@foreach (var racer in nonSelectedRacers)
+						{
+							<li @onclick="() => MoveToSelected(racer)" class="list-group-item racer-item">
+								<span class="small-item">@racer.Bib</span>
+								<span class="med-item">@racer.Name</span>
+								<span class="small-item">@racer.GroupNum</span>
+							</li>
+						}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="controls-wrapper">
+		<div class="form-floating mb-3">
+			<input @bind="newScreenName" @oninput="(EventArgs) => {newScreenName = EventArgs.Value.ToString();}" class="form-control" id="floatingInput">
+		  <label for="floatingInput">Screen Name</label>
+		</div>
+
+		<div class="button-wrapper">
+			<button @onclick="MoveAllToSelected" type="button" class="btn btn-secondary">Move All To Observed</button>
+			<button @onclick="MoveAllToUnSelected" type="button" class="btn btn-secondary">Move All To Unobserved</button>
+			@if(String.IsNullOrEmpty(newScreenName))
+			{
+				
+			}
+			else
+			{
+				<button @onclick="CreateBigScreen" type="button" class="btn btn-primary">Create Big Screen</button>
+				<button @onclick="CreateCheaterScreen" type="button" class="btn btn-primary">Create Cheater Screen</button>				
+			}
+		</div>
+	</div>
+</div>
+
+
+@code {
+
+	List<Racer> selectedRacers = new List<Racer>();
+	List<Racer> nonSelectedRacers;
+	private string? newScreenName;
+
+	protected override async Task OnInitializedAsync()
+	{
+		SetDefaultState();
+	}
+
+	void MoveToSelected(Racer racer)
+	{
+		var grabbedRacer = nonSelectedRacers.Find(r => r.Bib == racer.Bib);
+		nonSelectedRacers = nonSelectedRacers.FindAll(r => r.Bib != racer.Bib);
+		selectedRacers.Add(grabbedRacer);
+		selectedRacers.Sort();
+	}
+
+	void MoveToUnselected(Racer racer)
+	{
+		var grabbedRacer = selectedRacers.Find(r => r.Bib == racer.Bib);
+		selectedRacers = selectedRacers.FindAll(r => r.Bib != racer.Bib);
+		nonSelectedRacers.Add(grabbedRacer);
+		nonSelectedRacers.Sort();
+	}
+
+	void MoveAllToSelected()
+	{
+		nonSelectedRacers = new List<Racer>();
+		selectedRacers = RacerService.Racers;
+		selectedRacers.Sort();
+	}
+
+	void MoveAllToUnSelected()
+	{
+		selectedRacers = new List<Racer>();
+		nonSelectedRacers = RacerService.Racers;
+		nonSelectedRacers.Sort();
+	}
+
+	void CreateBigScreen()
+	{
+		var b = new BigScreen { Label = newScreenName, Subjects = selectedRacers };
+		ScreenManagerService.BigScreens.Add(b);
+		SetDefaultState();
+
+	}
+
+	void CreateCheaterScreen()
+	{
+		var c = new CheaterScreen { Label = newScreenName, Subjects = selectedRacers };
+		ScreenManagerService.CheaterScreens.Add(c);
+		SetDefaultState();
+
+	}
+
+	void SetDefaultState()
+	{
+		newScreenName = "";
+		nonSelectedRacers = RacerService.Racers;
+		nonSelectedRacers.Sort();
+		selectedRacers = new List<Racer>();
+	}
+}
+
+<style>
+
+	.racer-column{
+		margin-right: 50px;
+	}
+	.master-wrapper{
+		width: 100%;
+		display: flex;
+		flex-direction:column;
+	}
+	.controls-wrapper{
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		justify-content: center;
+		align-items: center;
+		margin-top: 20px;
+	}
+	.controls-wrapper button{
+		margin-right: 10px;
+	}
+	.index-wrapper{
+		display: flex;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+	}
+	.racer-item:hover{
+		background-color: lightblue;
+		cursor: pointer;
+	}
+	.list-group-container{
+		max-height: 600px;
+		overflow-y: scroll;
+	}
+	.small-item{
+		width: 40px;
+		display: inline-flex;
+	}
+	.med-small-item{
+		width: 80px;
+		display: inline-flex;
+	}
+	.med-item{
+		width: 210px;
+		display: inline-flex;
+	}
+</style>
+

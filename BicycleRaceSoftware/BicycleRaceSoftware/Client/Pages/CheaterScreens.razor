@@ -1,0 +1,149 @@
+﻿@page "/cheaterscreens"
+
+@using BicycleRaceSoftware.Shared
+@using BicycleRaceSoftware.Client.Services
+@using System.Timers
+@inject NavigationManager Navigation
+@inject IRacerService RacerService
+@inject ScreenManagerService ScreenManagerService
+
+<PageTitle>Cheaters</PageTitle>
+
+<div class="accordion" id="accordionExample">
+
+    @foreach (var screen in ScreenManagerService.CheaterScreens)
+    {
+        <div class="accordion-top-header">
+            <span class="small-item">Bib</span>
+            <span class="med-item">Name</span>
+            <span class="small-item">Sens.</span>
+            <span class="med-item">Time</span>
+             <span class="med-item">Cheating With</span>
+
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id=@GetHeadingID(screen)>
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target=@GetIDWithHash(screen) aria-expanded="true" aria-controls="collapseOne">
+                    @screen.Label
+                </button>
+            </h2>
+            <div id="@screen.Label" class="accordion-collapse collapse show" aria-labelledby=@GetHeadingID(screen) data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="list-group-container">
+                        <ul class="list-group">
+                            @foreach (var cheaterPair in RacerService.Cheaters)
+                            {
+                                if (CheaterIsInScreenSubjects(cheaterPair, screen.Subjects))
+                                {
+                                    <li class="list-group-item racer-item">
+                                        <span class="small-item">@cheaterPair.Item1.Bib</span>
+                                        <span class="med-item">@cheaterPair.Item1.Name</span>
+                                        <span class="small-item">@cheaterPair.Item1.Sensor</span>
+                                        <span class="med-item">@GetReadableTimeFromMs(cheaterPair.Item1.Time)</span>
+                                        <span class="small-item">@cheaterPair.Item2.Bib</span>
+                                        <span class="med-item">@cheaterPair.Item2.Name</span>
+                                        <span class="small-item">@cheaterPair.Item2.Sensor</span>
+                                        <span class="med-item">@GetReadableTimeFromMs(cheaterPair.Item2.Time)</span>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+
+    private string GetReadableTimeFromMs(int ms)
+    {
+        TimeSpan t = TimeSpan.FromMilliseconds(ms);
+        return string.Format("{0:D2}h:{1:D2}m:{2:D2}s:{3:D3}ms",
+                                t.Hours,
+                                t.Minutes,
+                                t.Seconds,
+                                t.Milliseconds);
+    }
+
+    public bool CheaterIsInScreenSubjects((CheaterStamp, CheaterStamp) pair, List<Racer> subjects)
+    {
+        foreach(var sub in subjects)
+        {
+            if(sub.Bib == pair.Item1.Bib)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var timer = new System.Timers.Timer(TimeSpan.FromMilliseconds(10));
+            timer.AutoReset = true;
+            timer.Elapsed += new System.Timers.ElapsedEventHandler(TimerMethod);
+            timer.Start();
+        }
+    }
+
+    public void TimerMethod(object sender, ElapsedEventArgs e)
+    {
+        StateHasChanged();
+    }
+
+    public string GetIDWithHash(Screen bs)
+    {
+        return "#" + RemoveWhitespace(bs.Label);
+    }
+
+    public string GetHeadingID(Screen bs)
+    {
+        return "heading" + RemoveWhitespace(bs.Label);
+    }
+
+    public string RemoveWhitespace(string input)
+    {
+        return new string(input.ToCharArray()
+            .Where(c => !Char.IsWhiteSpace(c))
+            .ToArray());
+    }
+
+}
+
+<style>
+
+    .accordion-item {
+        margin-bottom: 40px;
+    }
+    .accordion-top-header{
+        margin-left: 40px;
+    }
+    .accordion-top-header span{
+        display: flex-inline;
+        justify-self: flex-start;
+        font-weight: bold;
+    }
+    .list-group-container {
+        max-height: 600px;
+        overflow-y: scroll;
+    }
+
+    .small-item {
+        width: 40px;
+        display: inline-flex;
+    }
+
+    .med-small-item {
+        width: 80px;
+        display: inline-flex;
+    }
+
+    .med-item {
+        width: 210px;
+        display: inline-flex;
+    }
+</style>

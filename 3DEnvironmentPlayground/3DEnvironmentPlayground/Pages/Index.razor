@@ -1,0 +1,125 @@
+﻿@page "/"
+@implements IDisposable
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Index</PageTitle>
+
+<div class="main-wrapper">
+    <div class="left-side">
+
+        <h4>Bg Color</h4>
+        <input @ref=colorInput type="color" value="#483D8B" @onchange=ChangeBgColor/>
+        <div class="spacer-div"></div>
+        <h4>Add Shape</h4>
+        <ul class="list-group">
+            <li class="list-group-item"><button type="button" class="shape-button btn btn-secondary">Cube</button></li>
+            <li class="list-group-item"><button type="button" class="shape-button btn btn-secondary">Cylinder</button></li>
+            <li class="list-group-item"><button type="button" class="shape-button btn btn-secondary">Sphere</button></li>
+            <li class="list-group-item"><button type="button" class="shape-button btn btn-secondary">Tetrahedron</button></li>
+            <li class="list-group-item"><button type="button" class="shape-button btn btn-secondary">Cone</button></li>
+            <li class="list-group-item"><button type="button" class="shape-button btn btn-secondary">Capsule</button></li>
+        </ul>
+        <div class="spacer-div"></div>
+        
+        <button type="button" class="bottom-button btn btn-success" @onclick=StartNewDrawing>New Drawing</button>
+        <button type="button" class="bottom-button btn btn-primary">Load Drawing</button>
+
+        <button type="button" class="bottom-button btn btn-primary">Save Drawing</button>
+        <button type="button" class="bottom-button btn btn-primary">Export Picture</button>            
+        
+
+    </div>
+    <div class="center">
+        <Viewer @ref="drawing.View3D" ViewerSettings=@drawing.ViewerSettings Scene=drawing.Scene />
+    </div>
+    <div class="right-side">
+          <h4>Controls:</h4>
+        <ul class="list-group">
+          <li class="list-group-item">Left Mouse Bttn: Select Model, Orbit Camera</li>
+          <li class="list-group-item">Right Mouse Bttn: Pan Camera</li>
+           <li class="list-group-item">Scroll Wheel: Zoom Camera</li>
+          <li class="list-group-item">W, S: Resize on Vertical Axis</li>
+          <li class="list-group-item">A, D: Resize on Horizontal Axis</li>
+          <li class="list-group-item">Q, E: Resize on Forward Axis</li>
+          <li class="list-group-item">I, K: Translate on Vertical Axis</li>
+          <li class="list-group-item">J, L: Translate on Horizontal Axis</li>
+          <li class="list-group-item">U, O: Translate on Forward Axis</li>
+          <li class="list-group-item">Z: Undo</li>
+           <li class="list-group-item">Del: Delete Object</li>
+           <li class="list-group-item">Space: Duplicate Object</li>
+        </ul>
+    </div>
+</div>
+
+@code {
+    private Drawing? drawing;
+    ElementReference colorInput;
+
+    protected override Task OnInitializedAsync()
+    {
+        drawing = new Drawing();
+        return base.OnInitializedAsync();
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            drawing.View3D.ObjectSelected += drawing.OnObjectSelected;
+        }
+
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    public void ChangeBgColor(ChangeEventArgs e)
+    {
+        drawing.Scene.BackGroundColor = e.Value.ToString();
+        drawing.View3D.UpdateScene();
+    }
+
+    public async Task StartNewDrawing()
+    {
+        drawing.SetDefaultState();
+        await JSRuntime.InvokeVoidAsync("showAlert", "Hello");
+        await JSRuntime.InvokeVoidAsync("setDefaultColorPicker", colorInput);
+    }
+
+    public void Dispose()
+    {
+        drawing.View3D.ObjectSelected -= drawing.OnObjectSelected;
+    }
+
+}
+
+<style>
+    .main-wrapper{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        height: 100%;
+    }
+
+    .left-side{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .center{
+        width: 70%;
+    }
+
+    .shape-button{
+        width: 100%;
+    }
+    
+    .spacer-div{
+        margin: 10px 0 10px 0;
+    }
+
+    .bottom-button{
+        margin-bottom: 10px;
+    }
+
+</style>

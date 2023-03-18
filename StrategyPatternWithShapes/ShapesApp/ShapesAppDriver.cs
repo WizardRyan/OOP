@@ -23,7 +23,6 @@ namespace ShapesApp
                 Console.WriteLine(e);
             }
 
-            //make the console hang
             Console.WriteLine("Press any key to close the program...");
             Console.ReadKey();
         }
