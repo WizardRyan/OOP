@@ -29,17 +29,17 @@ namespace _3DEnvironmentPlayground.Shared
             };
         }
 
-        public static Mesh GetMesh(string shape, Vector3 position, Vector3 scale)
+        public static Mesh GetMesh(string shape, Vector3 position, Vector3 scale, Guid guid)
         {
             return shape switch
             {
-                "BoxGeometry" => new Mesh { Geometry = new BoxGeometry(), Position = position, Scale = scale },
-                "CapsuleGeometry" => new Mesh { Geometry = new CapsuleGeometry(), Position = position, Scale = scale },
-                "CylinderGeometry" => new Mesh { Geometry = new CylinderGeometry(), Position = position, Scale = scale },
-                "TetrahedronGeometry" => new Mesh { Geometry = new TetrahedronGeometry(), Position = position, Scale = scale },
-                "SphereGeometry" => new Mesh { Geometry = new SphereGeometry(), Position = position, Scale = scale },
-                "ConeGeometry" => new Mesh { Geometry = new ConeGeometry(), Position = position, Scale = scale },
-                _ => new Mesh(),
+                "BoxGeometry" => new Mesh { Geometry = new BoxGeometry(), Position = position, Scale = scale, Uuid=guid },
+                "CapsuleGeometry" => new Mesh { Geometry = new CapsuleGeometry(), Position = position, Scale = scale, Uuid = guid },
+                "CylinderGeometry" => new Mesh { Geometry = new CylinderGeometry(), Position = position, Scale = scale, Uuid = guid },
+                "TetrahedronGeometry" => new Mesh { Geometry = new TetrahedronGeometry(), Position = position, Scale = scale, Uuid = guid },
+                "SphereGeometry" => new Mesh { Geometry = new SphereGeometry(), Position = position, Scale = scale, Uuid = guid },
+                "ConeGeometry" => new Mesh { Geometry = new ConeGeometry(), Position = position, Scale = scale, Uuid = guid },
+                _ => throw new ArgumentException("You must pass in a valid mesh"),
             };
         }
     }

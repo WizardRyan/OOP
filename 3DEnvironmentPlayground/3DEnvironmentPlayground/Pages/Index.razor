@@ -4,7 +4,7 @@
 
 <PageTitle>Index</PageTitle>
 
-<div class="main-wrapper">
+<div class="main-wrapper" tabindex="0" @onkeydown="OnKeyDown" @ref=keyboardInputRef>
     <div class="left-side">
 
         <h4>Bg Color</h4>
@@ -12,24 +12,25 @@
         <div class="spacer-div"></div>
         <h4>Add Shape</h4>
         <ul class="list-group">
-            <li class="list-group-item"><button type="button" class="shape-button btn btn-secondary">Cube</button></li>
-            <li class="list-group-item"><button type="button" class="shape-button btn btn-secondary">Cylinder</button></li>
-            <li class="list-group-item"><button type="button" class="shape-button btn btn-secondary">Sphere</button></li>
-            <li class="list-group-item"><button type="button" class="shape-button btn btn-secondary">Tetrahedron</button></li>
-            <li class="list-group-item"><button type="button" class="shape-button btn btn-secondary">Cone</button></li>
-            <li class="list-group-item"><button type="button" class="shape-button btn btn-secondary">Capsule</button></li>
+            <li class="list-group-item"><button @onclick="() => AddShape(MeshShape.Box)" type="button" class="shape-button btn btn-secondary">Cube</button></li>
+            <li class="list-group-item"><button @onclick="() => AddShape(MeshShape.Cylinder)" type="button" class="shape-button btn btn-secondary">Cylinder</button></li>
+            <li class="list-group-item"><button @onclick="() => AddShape(MeshShape.Sphere)" type="button" class="shape-button btn btn-secondary">Sphere</button></li>
+            <li class="list-group-item"><button @onclick="() => AddShape(MeshShape.Tetrahedron)" type="button" class="shape-button btn btn-secondary">Tetrahedron</button></li>
+            <li class="list-group-item"><button @onclick="() => AddShape(MeshShape.Cone)" type="button" class="shape-button btn btn-secondary">Cone</button></li>
+            <li class="list-group-item"><button @onclick="() => AddShape(MeshShape.Capsule)" type="button" class="shape-button btn btn-secondary">Capsule</button></li>
         </ul>
         <div class="spacer-div"></div>
         
         <button type="button" class="bottom-button btn btn-success" @onclick=StartNewDrawing>New Drawing</button>
-        <button type="button" class="bottom-button btn btn-primary">Load Drawing</button>
-
-        <button type="button" class="bottom-button btn btn-primary">Save Drawing</button>
+        <button type="button" class="bottom-button btn btn-primary" @onclick=SaveDrawing>Save Drawing</button>
         <button type="button" class="bottom-button btn btn-primary">Export Picture</button>            
         
 
     </div>
     <div class="center">
+        <h5>Load Drawing:</h5>
+        <InputFile style="width: 300px;" class="form-control" OnChange="@HandleFileSelected" />
+
         <Viewer @ref="drawing.View3D" ViewerSettings=@drawing.ViewerSettings Scene=drawing.Scene />
     </div>
     <div class="right-side">
@@ -47,28 +48,47 @@
           <li class="list-group-item">Z: Undo</li>
            <li class="list-group-item">Del: Delete Object</li>
            <li class="list-group-item">Space: Duplicate Object</li>
+           <li class="list-group-item" style="font-weight: bold;">Remember: Clicking off of an object will deselect it!</li>
         </ul>
     </div>
 </div>
 
 @code {
     private Drawing? drawing;
+    private ElementReference keyboardInputRef;
     ElementReference colorInput;
 
     protected override Task OnInitializedAsync()
     {
         drawing = new Drawing();
+
+        Console.WriteLine($"JSON: {DrawingSaverLoader.GetJSONForMesh(new Mesh())}");
         return base.OnInitializedAsync();
     }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             drawing.View3D.ObjectSelected += drawing.OnObjectSelected;
+            await keyboardInputRef.FocusAsync();
         }
 
-        return base.OnAfterRenderAsync(firstRender);
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    public void OnKeyDown(KeyboardEventArgs e)
+    {
+        Command? command = InputManager.ProcessInput(e.Key, drawing.GetCurrentlySelectedMesh(), drawing);
+        if(command != null)
+        {
+            drawing.ExecuteCommand(command);
+        }
+    }
+
+    public void AddShape(MeshShape shape)
+    {
+        drawing.ExecuteCommand(new AddShapeCommand(drawing, shape));
     }
 
     public void ChangeBgColor(ChangeEventArgs e)
@@ -80,8 +100,20 @@
     public async Task StartNewDrawing()
     {
         drawing.SetDefaultState();
-        await JSRuntime.InvokeVoidAsync("showAlert", "Hello");
         await JSRuntime.InvokeVoidAsync("setDefaultColorPicker", colorInput);
+    }
+
+    public async Task SaveDrawing()
+    {
+        await JSRuntime.InvokeVoidAsync("downloadJSONFile", DrawingSaverLoader.GetJSONForDrawing(drawing));
+    }
+
+    public async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var buffer = new byte[e.File.Size];
+        await e.File.OpenReadStream().ReadAsync(buffer);
+        string json = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+        DrawingSaverLoader.LoadDrawingFromJSON(drawing, json);
     }
 
     public void Dispose()
