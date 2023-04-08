@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="_3DEnvironmentPlayground.Shared.Command">
+    <Position X="3.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Shared\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_3DEnvironmentPlayground.Shared.DeleteCommand">
+    <Position X="0.75" Y="7" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAQAAAAAAAAAgAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Shared\DeleteCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_3DEnvironmentPlayground.Shared.DuplicateCommand">
+    <Position X="2.75" Y="7" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAQAAAAAAAAAgAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Shared\DuplicateCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_3DEnvironmentPlayground.Shared.TransformCommand">
+    <Position X="4.75" Y="7" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAiAAAAAAAAAQAAAAAAAAAgAAAAAAAAABAAAAAAAQ=</HashCode>
+      <FileName>Shared\TransformCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_3DEnvironmentPlayground.Shared.AddShapeCommand">
+    <Position X="6.75" Y="7" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAQAAAAAAAAAgAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Shared\AddShapeCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_3DEnvironmentPlayground.Shared.Drawing">
+    <Position X="10" Y="5.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AIAkAAAAIIAABEAAgAARAAAAREAAAAAAAAAAABAAAAI=</HashCode>
+      <FileName>Shared\Drawing.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_3DEnvironmentPlayground.Shared.DrawingSaverLoader">
+    <Position X="14" Y="6.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAABAAAAAAAAAgAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Shared\DrawingSaverLoader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_3DEnvironmentPlayground.Shared.MeshFactory">
+    <Position X="8" Y="11.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Shared\MeshFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_3DEnvironmentPlayground.Shared.MeshData">
+    <Position X="12.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAIAACAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Shared\DrawingSaverLoader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_3DEnvironmentPlayground.Shared.DrawingSave">
+    <Position X="16.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASAAAAAAAAA=</HashCode>
+      <FileName>Shared\DrawingSaverLoader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_3DEnvironmentPlayground.Shared.InputManager">
+    <Position X="18.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAEAAAAAAAAAAABAAAASAAAAEAAgAAAABAAAAAAAgCA=</HashCode>
+      <FileName>Shared\InputManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

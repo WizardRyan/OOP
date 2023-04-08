@@ -22,7 +22,9 @@ namespace _3DEnvironmentPlayground.Shared
         private Guid lastSelectedGuid;
         private List<Command> _commands = new List<Command>();
 
-        public Drawing()
+        private static Drawing? singletonDrawing;
+
+        private Drawing()
         {
             ViewerSettings = new ViewerSettings()
             {
@@ -33,10 +35,19 @@ namespace _3DEnvironmentPlayground.Shared
             SetDefaultState();
         }
 
+        //Implemenation of singleton design pattern. The above constructors "private" accessor ensures consumers of the class must use GetInstance, and that only one instance may exist.
+        public static Drawing GetInstance()
+        {
+            if(singletonDrawing == null)
+            {
+                singletonDrawing = new Drawing();
+            }
+            return singletonDrawing;
+        }
+
         public void OnObjectSelected(Object3DArgs e)
         {
             lastSelectedGuid = e.UUID;
-            Console.WriteLine($"last Selected Object: {e.UUID}");
         }
 
         public void SetDefaultState()
@@ -71,12 +82,14 @@ namespace _3DEnvironmentPlayground.Shared
             return (Mesh?)Scene.Children.Find(x => x.Uuid== guid);
         }
 
+        // commands pattern + commands inherently utilize strategy pattern through polymorphism
         public void ExecuteCommand(Command command)
         {
             command.Execute();
             _commands.Add(command);
         }
 
+        //undo design pattern
         public void Undo()
         {
             if(_commands.Count > 0)

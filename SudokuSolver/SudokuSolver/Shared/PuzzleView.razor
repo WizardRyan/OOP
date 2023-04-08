@@ -1,0 +1,98 @@
+﻿@using Excubo.Blazor.Canvas.Contexts
+
+<Canvas @ref="helper_canvas" width="800px" height="800px" />
+
+
+@code {
+    [Parameter]
+    public Puzzle? Puzz { get; set; }
+
+    private Canvas helper_canvas;
+    private Context2D ctx;
+    private readonly int canvasWidth = 800;
+    private readonly int canvasBorderWidth = 2;
+    private readonly int thickLineWidth = 2;
+    private readonly int thinLineWidth = 1;
+
+    protected override async Task OnAfterRenderAsync(bool first_render)
+    {
+        if (first_render)
+        {
+            ctx = await helper_canvas.GetContext2DAsync();
+            SetDefaultCanvas();
+        }
+    }
+
+    private async Task SetDefaultCanvas()
+    {
+        await ctx.JS.fillStyle("rgb(0, 0, 0)");
+        await ctx.JS.fillRect(0, 0, canvasWidth, canvasWidth);
+        await ctx.JS.fillStyle("rgb(255, 255, 255)");
+        await ctx.JS.fillRect(canvasBorderWidth, canvasBorderWidth, canvasWidth - canvasBorderWidth * 2, canvasWidth - canvasBorderWidth * 2);
+    }
+
+    public async Task DrawPuzzle(Puzzle puzzle)
+    {
+        await SetDefaultCanvas();
+
+        Puzz = puzzle;
+
+        double fontSize = 24;
+        await ctx.JS.fillStyle("rgb(0, 0, 0)");
+        await ctx.JS.font($"{fontSize}px solid");
+        double cellSize = canvasWidth / puzzle.GameBoard.Count;
+        double startX = cellSize / 2;
+        double startY = cellSize / 2;
+        double rowCount = 0;
+        double columntCount = 0;
+        int sqrt = (int)Math.Sqrt(puzzle.GameBoard.Count);
+
+
+        foreach(var cellRow in puzzle.GameBoard)
+        {
+            foreach(var cell in cellRow)
+            {
+                var val = cell.Value != null ? cell.Value : "";
+                var txtMetrics = await ctx.JS.measureText(val);
+                await ctx.JS.fillText(val, startX - (txtMetrics.Width / 2), startY + (fontSize / 3));
+                startX += cellSize;
+            }
+            startX = cellSize / 2;
+            startY += cellSize;
+        }
+
+        for(int i = 1; i < puzzle.GameBoard.Count; i++)
+        {
+            int lineWidth = thinLineWidth;
+            string fillSty = "rgb(100, 100, 100)";
+            if(i % sqrt == 0)
+            {
+                lineWidth = thickLineWidth;
+                fillSty = "rgb(0, 0, 0)";
+            }
+            await ctx.JS.fillStyle(fillSty);
+            await ctx.JS.fillRect(0, cellSize * i, canvasWidth, lineWidth);
+            for(int j = 1; j < puzzle.GameBoard.Count; j++)
+            {
+                lineWidth = thinLineWidth;
+                fillSty = "rgb(100, 100, 100)";
+                if (j % sqrt == 0)
+                {
+                    lineWidth = thickLineWidth;
+                    fillSty = "rgb(0, 0, 0)";
+                }
+                await ctx.JS.fillStyle(fillSty);
+                await ctx.JS.fillRect(cellSize * j, 0, lineWidth, canvasWidth);
+            }
+        }
+
+    }
+        public async Task DisplayCouldNotSolve()
+        {
+            await ctx.JS.font("70px solid");
+            await ctx.JS.fillStyle("rgb(255, 0, 0)");
+            string mssg = "No Solution Found";
+            var txtMetrics = await ctx.JS.measureText(mssg);
+            await ctx.JS.fillText(mssg, (canvasWidth / 2) - (txtMetrics.Width / 2), (canvasWidth /2) - (40 / 3));
+        }
+}

@@ -1,4 +1,5 @@
-﻿using Blazor3D.Maths;
+﻿using Blazor3D.Core;
+using Blazor3D.Maths;
 using Blazor3D.Objects;
 using Microsoft.JSInterop;
 using System.Text.Json;
@@ -51,19 +52,42 @@ namespace _3DEnvironmentPlayground.Shared
 
         public static string GetJSONForDrawing(Drawing drawing)
         {
-            var DrawingSave = new DrawingSave(drawing.Scene.BackGroundColor);
+            var drawingSave = new DrawingSave(drawing.Scene.BackGroundColor);
             foreach(var obj in drawing.Scene.Children)
             {
                 if (obj.Type == "Mesh") {
                     Mesh mesh = (Mesh)obj;
-                    DrawingSave.MeshDatas.Add(new MeshData(mesh.Geometry.Type, mesh.Position, mesh.Scale, mesh.Uuid));
+                    drawingSave.MeshDatas.Add(new MeshData(mesh.Geometry.Type, mesh.Position, mesh.Scale, mesh.Uuid));
                 }
             }
-            return JsonSerializer.Serialize(DrawingSave);
+            return JsonSerializer.Serialize(drawingSave);
         }
 
         public static void LoadDrawingFromJSON(Drawing drawing, string json)
         {
+            drawing.SetDefaultState();
+            Object3D? theOneCube = null;
+            foreach(var obj in drawing.Scene.Children)
+            {
+                if(obj.Type == "Mesh")
+                {
+                    theOneCube = obj;
+                }
+            }
+            if(theOneCube != null)
+            {
+                drawing.Scene.Children.Remove(theOneCube);
+            }
+
+            var drawingSave = JsonSerializer.Deserialize<DrawingSave>(json);
+            if(drawingSave != null)
+            {
+                drawing.Scene.BackGroundColor = drawingSave.BgColor;
+                foreach(var meshData in drawingSave.MeshDatas)
+                {
+                    drawing.AddMesh(MeshFactory.GetMesh(meshData.MeshType, meshData.Position, meshData.Scale, meshData.Guid));
+                }
+            }
 
         }
     }

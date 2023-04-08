@@ -23,7 +23,7 @@
         
         <button type="button" class="bottom-button btn btn-success" @onclick=StartNewDrawing>New Drawing</button>
         <button type="button" class="bottom-button btn btn-primary" @onclick=SaveDrawing>Save Drawing</button>
-        <button type="button" class="bottom-button btn btn-primary">Export Picture</button>            
+        <button type="button" class="bottom-button btn btn-primary" @onclick=ExportPicture>Export Picture</button>            
         
 
     </div>
@@ -31,7 +31,9 @@
         <h5>Load Drawing:</h5>
         <InputFile style="width: 300px;" class="form-control" OnChange="@HandleFileSelected" />
 
-        <Viewer @ref="drawing.View3D" ViewerSettings=@drawing.ViewerSettings Scene=drawing.Scene />
+        <span @ref=viewerSpan>
+            <Viewer @ref="drawing.View3D" ViewerSettings=@drawing.ViewerSettings Scene=drawing.Scene  />
+        </span>
     </div>
     <div class="right-side">
           <h4>Controls:</h4>
@@ -57,12 +59,12 @@
     private Drawing? drawing;
     private ElementReference keyboardInputRef;
     ElementReference colorInput;
+    ElementReference viewerSpan;
 
     protected override Task OnInitializedAsync()
     {
-        drawing = new Drawing();
+        drawing = Drawing.GetInstance();
 
-        Console.WriteLine($"JSON: {DrawingSaverLoader.GetJSONForMesh(new Mesh())}");
         return base.OnInitializedAsync();
     }
 
@@ -116,6 +118,15 @@
         DrawingSaverLoader.LoadDrawingFromJSON(drawing, json);
     }
 
+    public async Task ExportPicture()
+    {
+        //attempt to disable double buffering, then fill single buffer with image. Doesn't work.
+        await JSRuntime.InvokeVoidAsync("hide", viewerSpan);
+        await drawing.View3D.UpdateScene();
+        await JSRuntime.InvokeVoidAsync("exportPicture", viewerSpan);
+        await JSRuntime.InvokeVoidAsync("show", viewerSpan);
+    }
+
     public void Dispose()
     {
         drawing.View3D.ObjectSelected -= drawing.OnObjectSelected;
@@ -136,6 +147,10 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
+    }
+
+    .right-side{
+        margin-left: 10px;
     }
 
     .center{

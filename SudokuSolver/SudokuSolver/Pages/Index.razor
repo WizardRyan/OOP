@@ -1,0 +1,108 @@
+﻿@page "/"
+@inject IJSRuntime JSRuntime
+
+
+<PageTitle>SudokuSolver</PageTitle>
+
+
+<div class="master-wrapper">
+    <div class="file-upload">
+        <p>Upload File:</p>
+        <InputFile style="width: 300px;" class="form-control" OnChange="@HandleFileSelected" />
+    </div>
+    <PuzzleView @ref="puzzleViewRef"></PuzzleView>
+    @if (puzzleSolved)
+    {
+        <div class="file-download">
+            <p>Solution Name:</p>
+            <input type="text" class="form-control" @bind=desiredFileName />
+        </div>
+        <button type="button" class="btn btn-primary" @onclick=DownloadSolution>Download solution</button>
+    }
+    else
+    {
+        <button style="margin-top: 10px;" type="button" class="btn btn-primary" @onclick=SolvePuzzle>Solve</button>
+    }
+</div>
+
+
+@code{
+    private string selectedFileName = "";
+    private string desiredFileName = "";
+    private Puzzle? puzzleBoard;
+    private PuzzleView? puzzleViewRef;
+    private bool puzzleSolved = false;
+
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+
+    public async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        puzzleSolved = false;
+        var buffer = new byte[e.File.Size];
+        await e.File.OpenReadStream().ReadAsync(buffer);
+        string inputFile = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+        selectedFileName = e.File.Name;
+        desiredFileName = "Solved-" + selectedFileName;
+
+        puzzleBoard = new Puzzle(inputFile);
+        await puzzleViewRef.DrawPuzzle(puzzleBoard);
+    }
+
+    public async Task SolvePuzzle()
+    {
+        if (puzzleBoard.Solve())
+        {
+            puzzleSolved = true;
+        }
+        else
+        {
+            await puzzleViewRef.DisplayCouldNotSolve();
+        }
+    }
+
+    public async Task DownloadSolution()
+    {
+        //data, fname
+        await JSRuntime.InvokeVoidAsync("downloadStringAsFile", "data", desiredFileName);
+    }
+}
+
+<style>
+    .master-wrapper{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+    .file-upload{
+        display:flex;
+        align-items: center;
+    }
+
+    .file-download{
+        display:flex;
+        align-items: center;
+        width: 415px;
+    }
+    .file-download button{
+        
+    }
+
+    .file-upload p{
+        font-size: 20px;
+        margin-right: 10px;
+        margin-bottom: 0px;
+    }
+
+    .file-download p{
+        font-size: 20px;
+        margin-right: 10px;
+        margin-bottom: 0px;
+        width: 106px;
+    }
+</style>
