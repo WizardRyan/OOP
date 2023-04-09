@@ -29,7 +29,8 @@
 @code{
     private string selectedFileName = "";
     private string desiredFileName = "";
-    private Puzzle? puzzleBoard;
+    //the facade being used in the UI
+    private PuzzleFacade? puzzleFacade;
     private PuzzleView? puzzleViewRef;
     private bool puzzleSolved = false;
 
@@ -47,26 +48,27 @@
         selectedFileName = e.File.Name;
         desiredFileName = "Solved-" + selectedFileName;
 
-        puzzleBoard = new Puzzle(inputFile);
-        await puzzleViewRef.DrawPuzzle(puzzleBoard);
+        puzzleFacade = new PuzzleFacade(inputFile);
+        await puzzleViewRef.DrawPuzzle(puzzleFacade.Puzzle);
     }
 
     public async Task SolvePuzzle()
     {
-        if (puzzleBoard.Solve())
+        if (puzzleFacade.Solve())
         {
             puzzleSolved = true;
+            await puzzleViewRef.DrawPuzzle(puzzleFacade.Puzzle);
         }
         else
         {
+            await puzzleViewRef.DrawPuzzle(puzzleFacade.Puzzle);
             await puzzleViewRef.DisplayCouldNotSolve();
         }
     }
 
     public async Task DownloadSolution()
     {
-        //data, fname
-        await JSRuntime.InvokeVoidAsync("downloadStringAsFile", "data", desiredFileName);
+        await JSRuntime.InvokeVoidAsync("downloadStringAsFile", puzzleFacade.GetStringRepresentation(), desiredFileName);
     }
 }
 
