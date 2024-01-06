@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SudokuSolver.Shared.CellAlgorithm">
+    <Position X="2.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAEAAAAQAAA=</HashCode>
+      <FileName>Shared\CellAlgorithm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SudokuSolver.Shared.LastFreeCell">
+    <Position X="3.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Shared\LastFreeCell.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SudokuSolver.Shared.LastPossibleSymbol">
+    <Position X="1.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAgAAAAA=</HashCode>
+      <FileName>Shared\LastPossibleSymbol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SudokuSolver.Shared.Puzzle">
+    <Position X="6.25" Y="6.25" Width="3" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="SudokuSolver.Shared.Puzzle.Cell">
+        <TypeIdentifier>
+          <NewMemberFileName>Shared\Puzzle.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AEAAQAAAAABIBABAAIEAAAQIAAAAgAAAAAAAAIAAAAQ=</HashCode>
+      <FileName>Shared\Puzzle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SudokuSolver.Shared.PuzzleFacade">
+    <Position X="10.75" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAgAAAAAAIAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Shared\PuzzleFacade.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SudokuSolver.Shared.PuzzleStringAdapter">
+    <Position X="7.25" Y="4" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Shared\PuzzleStringAdapter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
