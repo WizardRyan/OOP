@@ -2,8 +2,10 @@
 @implements IDisposable
 @inject IJSRuntime JSRuntime
 
-<PageTitle>Index</PageTitle>
+<PageTitle>3D Playground</PageTitle>
 
+<div class="outermost-wrapper">
+    <h2>3D Playground</h2>
 <div class="main-wrapper" tabindex="0" @onkeydown="OnKeyDown" @ref=keyboardInputRef>
     <div class="left-side">
 
@@ -23,7 +25,7 @@
         
         <button type="button" class="bottom-button btn btn-success" @onclick=StartNewDrawing>New Drawing</button>
         <button type="button" class="bottom-button btn btn-primary" @onclick=SaveDrawing>Save Drawing</button>
-        <button type="button" class="bottom-button btn btn-primary" @onclick=ExportPicture>Export Picture</button>            
+        @*<button type="button" class="bottom-button btn btn-primary" @onclick=ExportPicture>Export Picture</button>            *@
         
 
     </div>
@@ -53,6 +55,7 @@
            <li class="list-group-item" style="font-weight: bold;">Remember: Clicking off of an object will deselect it!</li>
         </ul>
     </div>
+</div>
 </div>
 
 @code {
@@ -135,11 +138,24 @@
 }
 
 <style>
+
+    .outermost-wrapper{
+        /*display: flex*/
+    }
+    h2{
+        text-align: center;
+    }
     .main-wrapper{
         display: flex;
         justify-content: space-around;
         align-items: center;
         height: 100%;
+    }
+
+    .main-wrapper:focus{
+        outline: none;
+        outline-width: 0;
+        border: none;
     }
 
     .left-side{
